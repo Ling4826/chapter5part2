@@ -11,6 +11,10 @@ import org.junit.platform.suite.api.Suite;
 public class JUnitTestSuite {
     @BeforeAll
     public static void initJfxRuntime() {
-        javafx.application.Platform.startup(() -> {});
+        try {
+            javafx.application.Platform.startup(() -> {});
+        } catch (IllegalStateException e) {
+
+        }
     }
 }

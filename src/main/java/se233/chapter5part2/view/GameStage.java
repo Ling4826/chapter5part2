@@ -2,9 +2,13 @@ package se233.chapter5part2.view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import se233.chapter5part2.model.Food;
 import se233.chapter5part2.model.Snake;
 
@@ -29,7 +33,7 @@ public class GameStage extends Pane {
         snake.getBody().forEach(p -> {
             gc.fillRect(p.getX() * TILE_SIZE, p.getY() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         });
-        gc.setFill(Color.RED);
+        gc.setFill(food.getColor());
         gc.fillRect(food.getPosition().getX() * TILE_SIZE, food.getPosition().getY() * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
@@ -40,4 +44,5 @@ public class GameStage extends Pane {
     public void setKey(KeyCode key) {
         this.key = key;
     }
+
 }

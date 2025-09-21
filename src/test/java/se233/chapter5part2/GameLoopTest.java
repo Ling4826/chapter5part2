@@ -32,6 +32,7 @@ public class GameLoopTest {
         gameLoop = new GameLoop(gameStage, snake, food);
     }
 
+
     private void clockTickHelper() throws Exception {
         ReflectionHelper.invokeMethod(gameLoop, "keyProcess", new Class<?>[0]);
         ReflectionHelper.invokeMethod(gameLoop, "checkCollision", new Class<?>[0]);
@@ -41,10 +42,9 @@ public class GameLoopTest {
     @Test
     public void keyProcess_pressRight_snakeTurnRight() throws Exception {
         ReflectionHelper.setField(gameStage, "key", KeyCode.RIGHT);
-        ReflectionHelper.setField(snake, "direction", Direction.DOWN);
+        snake.setDirection(Direction.DOWN);
         clockTickHelper();
-        Direction currentDirection = (Direction) ReflectionHelper.getField(snake, "direction");
-        assertEquals(Direction.RIGHT, currentDirection);
+        assertEquals(Direction.RIGHT, snake.getDirection());
     }
 
     @Test
@@ -68,9 +68,12 @@ public class GameLoopTest {
         Snake mockSnake = Mockito.mock(Snake.class);
         Food mockFood = Mockito.mock(Food.class);
         GameLoop localGameLoop = new GameLoop(mockGameStage, mockSnake, mockFood);
+
         ReflectionHelper.invokeMethod(localGameLoop, "redraw", new Class<?>[0]);
         ReflectionHelper.invokeMethod(localGameLoop, "redraw", new Class<?>[0]);
         ReflectionHelper.invokeMethod(localGameLoop, "redraw", new Class<?>[0]);
+
         verify(mockGameStage, times(3)).render(mockSnake, mockFood);
     }
 }
+

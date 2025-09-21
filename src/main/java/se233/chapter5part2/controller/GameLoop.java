@@ -1,10 +1,14 @@
 package se233.chapter5part2.controller;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import se233.chapter5part2.model.Direction;
 import se233.chapter5part2.model.Food;
+import se233.chapter5part2.model.FoodType;
 import se233.chapter5part2.model.Snake;
 import se233.chapter5part2.view.GameStage;
+import java.util.Random;
 
 public class GameLoop implements Runnable {
     private GameStage gameStage;
@@ -12,7 +16,6 @@ public class GameLoop implements Runnable {
     private Food food;
     private float interval = 1000.0f / 10;
     private boolean running;
-
     public GameLoop(GameStage gameStage, Snake snake, Food food) {
         this.snake = snake;
         this.gameStage = gameStage;
@@ -36,7 +39,7 @@ public class GameLoop implements Runnable {
 
     private void checkCollision() {
         if (snake.collided(food)) {
-            snake.grow();
+            snake.eat(food);
             food.respawn();
         }
         if (snake.checkDead()) {
@@ -46,6 +49,7 @@ public class GameLoop implements Runnable {
 
     private void redraw() {
         gameStage.render(snake, food);
+
     }
 
     @Override
@@ -60,5 +64,14 @@ public class GameLoop implements Runnable {
                 e.printStackTrace();
             }
         }
+        update(snake);
+    }
+    private void update(Snake s){
+        Platform.runLater(() -> {
+            Alert a = new Alert(Alert.AlertType.WARNING);
+            a.setContentText("Game Over");
+            a.show();
+        });
+
     }
 }

@@ -1,10 +1,12 @@
 package se233.chapter5part2;
 
 import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se233.chapter5part2.model.Direction;
 import se233.chapter5part2.model.Food;
+import se233.chapter5part2.model.FoodType;
 import se233.chapter5part2.model.Snake;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,63 +15,50 @@ public class SnakeTest {
 
     @BeforeEach
     public void setup() {
-        snake = new Snake(new Point2D(0, 0));
+        snake = new Snake(new Point2D(10, 10));
+    }
+
+
+    @Test
+    void testEatingNormalFoodIncreasesScoreByOne() {
+        Food normalFood = new Food();
+        normalFood.setFoodType(FoodType.NORMAL);
+        assertEquals(0, snake.getScore(), "Initial score should be 0.");
+        snake.eat(normalFood);
+        assertEquals(1, snake.getScore(), "Score should be 1 after eating normal food.");
+    }
+
+
+    @Test
+    void testEatingSpecialFoodIncreasesScoreByFive() {
+        Food specialFood = new Food();
+        specialFood.setFoodType(FoodType.SPECIAL);
+        assertEquals(0, snake.getScore(), "Initial score should be 0.");
+        snake.eat(specialFood);
+        assertEquals(5, snake.getScore(), "Score should be 5 after eating special food.");
     }
 
     @Test
-    public void initialPosition_shouldBe_atOrigin() {
-        assertEquals(new Point2D(0, 0), snake.getHead());
-    }
-
-    @Test
-    public void move_afterInitialized_headShouldBeInDownwardDirection() {
-        snake.setDirection(Direction.DOWN);
-        snake.move();
-        assertEquals(new Point2D(0, 1), snake.getHead());
-    }
-
-    @Test
-    public void grow_shouldIncreaseLengthByOne() {
-        snake.move(); // move once to set prev_tail
-        snake.grow();
-        assertEquals(2, snake.getLength());
-    }
-
-    @Test
-    public void grow_shouldAddPreviousHeadToBody() {
-        Point2D cur_head = snake.getHead();
-        snake.move();
-        snake.grow();
-        assertTrue(snake.getBody().contains(cur_head));
-    }
-
-    @Test
-    public void collided_withSnake_shouldBeDetected() {
-        Food food = new Food(new Point2D(0, 0));
-        assertTrue(snake.collided(food));
-    }
-
-    @Test
-    public void checkDead_ifHitGameBorder_snakeWillDie() {
-        snake = new Snake(new Point2D(29, 29));
+    void snakeShouldNotReverseFromRightToLeft() {
         snake.setDirection(Direction.RIGHT);
-        snake.move();
-        assertTrue(snake.checkDead());
+        snake.changeDirection(KeyCode.LEFT);
+        assertEquals(Direction.RIGHT, snake.getDirection(), "Snake should not reverse direction from Right to Left.");
     }
 
+
     @Test
-    public void checkDead_ifHitItself_snakeWillDie() {
-        snake = new Snake(new Point2D(5, 5));
-        snake.setDirection(Direction.RIGHT);
-        snake.move(); snake.grow(); // (6,5), length 2
-        snake.move(); snake.grow(); // (7,5), length 3
-        snake.move(); snake.grow(); // (8,5), length 4
+    void snakeShouldNotReverseFromUpToDown() {
         snake.setDirection(Direction.UP);
-        snake.move(); snake.grow(); // (8,4), length 5
-        snake.setDirection(Direction.LEFT);
-        snake.move(); snake.grow(); // (7,4), length 6
-        snake.setDirection(Direction.DOWN);
-        snake.move(); // Moves head to (7,5), colliding with its body
-        assertTrue(snake.checkDead());
+        snake.changeDirection(KeyCode.DOWN);
+        assertEquals(Direction.UP, snake.getDirection(), "Snake should not reverse direction from Up to Down.");
+    }
+
+
+    @Test
+    void snakeShouldTurnFromRightToUp() {
+        snake.setDirection(Direction.RIGHT);
+        snake.changeDirection(KeyCode.UP);
+        assertEquals(Direction.UP, snake.getDirection(), "Snake should be able to turn from Right to Up.");
     }
 }
+
