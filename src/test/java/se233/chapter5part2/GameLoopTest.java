@@ -48,6 +48,12 @@ public class GameLoopTest {
     }
 
     @Test
+    public void makesomeing() throws Exception {
+        int i = 1+1;
+        assertEquals(2 , i, "true");
+    }
+
+    @Test
     public void collided_snakeEatFood_shouldGrowAndFoodRespawn() throws Exception {
         clockTickHelper();
         assertTrue(snake.getLength() > 1, "Snake should grow");
